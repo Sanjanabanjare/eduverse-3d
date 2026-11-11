@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: zip build check
+        run: |
+          rm -rf /tmp/zipcheck && mkdir -p /tmp/zipcheck
+          cp -r . /tmp/zipcheck/eduverse-3d
+          cd /tmp/zipcheck/eduverse-3d
+          rm -rf backend/data node_modules .git opencv-drawing/.venv-mediapipe .venv
+          find . -name '.DS_Store' -delete
+          rm -f .env
+          cd /tmp/zipcheck && zip -qr eduverse-check.zip eduverse-3d
+          unzip -l eduverse-check.zip | tail -2
+
+  # --- Deploy (example: SSH + rsync). Uncomment and set secrets to enable. ---
+  # deploy:
+  #   needs: test
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: deploy over ssh
+  #       uses: appleboy/ssh-action@v1
+  #       with:
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USER }}
+  #         key: ${{ secrets.DEPLOY_KEY }}
+  #         script: |
+  #           cd /opt/eduverse/eduverse-3d && git pull --ff-only
+  #           npm ci --omit=dev
+  #           sudo systemctl restart eduverse

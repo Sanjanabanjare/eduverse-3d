@@ -1,0 +1,6 @@
+# macOS 3.12 uses MediaPipe's stable Solutions hand graph (CPU).
+# Keep these in an isolated Python 3.12 environment; MediaPipe 1.x Tasks can
+# abort in its macOS Metal graph even when CPU is selected.
+opencv-contrib-python>=4.8,<5
+numpy>=1.24,<2
+mediapipe==0.10.21

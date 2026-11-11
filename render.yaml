@@ -1,0 +1,37 @@
+# EduVerse 3D — Render blueprint.
+# In the Render dashboard: New → Blueprint → connect the repo → Apply.
+# Then set the secret env vars in the dashboard (see .env.example).
+# Render provides PORT and HTTPS automatically — do not set either here.
+#
+# IMPORTANT — the data file: Render's filesystem is ephemeral. Without the
+# disk below, backend/data/store.json (all users, courses, progress) is
+# WIPED on every deploy/restart. The disk needs a paid instance type.
+# Uploads (backend/uploads/) are NOT on the disk — they still vanish on
+# redeploy; set the S3_* variables to keep uploads, or accept the loss.
+
+services:
+  - type: web
+    name: eduverse-3d
+    env: node
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render injects PORT automatically; the server reads it.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_BASE_URL
+        value: https://eduverse-3d.onrender.com
+      - key: EDUVERSE_ADMIN_SETUP_CODE
+        generateValue: true
+      # Optional — fill in the dashboard when you have them:
+      # OPENAI_API_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+      # GOOGLE_REDIRECT_URI, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET,
+      # RESEND_API_KEY, JUDGE0_API_URL, S3_* (see .env.example)
+    disk:
+      name: eduverse-data
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1

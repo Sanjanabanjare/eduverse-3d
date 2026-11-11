@@ -1,0 +1,17 @@
+{
+  "engines": {
+    "node": ">=18"
+  },
+  "name": "eduverse-3d",
+  "private": true,
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "node --test --test-concurrency=1 backend/*.test.js",
+    "check:prod": "node scripts/check-production.mjs",
+    "load-test": "node scripts/load-test.mjs"
+  },
+  "version": "1.1.0",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

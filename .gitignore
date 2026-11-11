@@ -1,0 +1,44 @@
+# Node dependencies
+node_modules/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+.venv-mediapipe/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.local
+
+# Build files
+dist/
+build/
+
+# Mac files
+.DS_Store
+
+# Ignore virtual environments anywhere in the project
+**/.venv/
+**/.venv-*/
+**/venv/
+**/env/
+
+# Ignore Python cache everywhere
+**/__pycache__/
+**/*.pyc
+
+# Ignore Node dependencies everywhere
+**/node_modules/
+
+# Private application data
+backend/data/store.json
+backend/data/store.json.bak
+
+# User-uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
